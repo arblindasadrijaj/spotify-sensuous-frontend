@@ -1,0 +1,36 @@
+import streamlit as st
+
+import numpy as np
+import pandas as pd
+import requests
+
+st.title("""Song Explorer :rocket:: _Discover Similar Songs Based on Your Favorites_
+""")
+
+st.markdown(""" Our machine learning tool helps you **discover new songs** that you're likely to enjoy based on the characteristics of a song that you input.
+
+Simply enter a song that you like, and our tool will analyze its spectrogram to identify its unique features. It will then suggest other songs with similar spectrograms, which you can explore and discover new music that you might not have found otherwise.
+
+Give it a try and see how it can expand your musical horizons! :notes:
+""")
+
+def main():
+    # Header 2
+    st.markdown("## Enter a song here")
+
+    # Input
+    song = str(st.text_input('You can write the title of your favorite song here, but make sure you spell it right :eyes:'))
+
+    # Define the accepted songlist
+    songlist = ["we will rock you", "another one bites the dust", "the show must go on"]
+
+    # only allow songs from the accepted songlist
+    if song in songlist:
+        st.write('We will be happy to make suggestions based on your choice:', song)
+
+
+if __name__ == "__main__":
+    main()
+
+
+st.markdown("Based on the song title you entered, we have come up with the following suggestions for you:")
