@@ -24,13 +24,18 @@ def main():
     # Define the accepted songlist
     songlist = ["we will rock you", "another one bites the dust", "the show must go on"]
 
-    # only allow songs from the accepted songlist
-    if song in songlist:
-        st.write('We will be happy to make suggestions based on your choice:', song)
+    # Only allow songs from the accepted songlist
+    valid_input = True
+    if song != '' and song not in songlist:
+        valid_input = False
 
+    # Display appropriate message
+    if song == '':
+        pass  # don't display any message if input is empty
+    elif valid_input:
+        st.write('We will be happy to make suggestions based on your choice:', song)
+    else:
+        st.write('Sorry, that song is not in our list. Please choose from:', songlist)
 
 if __name__ == "__main__":
     main()
-
-
-st.markdown("Based on the song title you entered, we have come up with the following suggestions for you:")
