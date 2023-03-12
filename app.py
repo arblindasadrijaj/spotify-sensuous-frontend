@@ -4,6 +4,21 @@ import numpy as np
 import pandas as pd
 import requests
 
+# Define the URL of your FastAPI application
+fastapi_url = "https://api-sensuous-z4ulbtghrq-ew.a.run.app"
+
+# Make a GET request to the /items endpoint of your FastAPI application
+response = requests.get(fastapi_url + "/dummy?song=we%20will%20rock%20you")
+
+# Check if the request was successful
+if response.status_code == 200:
+    # Display the response data in Streamlit
+    st.write(response.json())
+else:
+    # Display an error message if the request failed
+    st.write("Error: Could not retrieve items")
+
+
 st.title("""Song Explorer :rocket:: _Discover Similar Songs Based on Your Favorites_
 """)
 
