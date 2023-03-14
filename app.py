@@ -7,18 +7,6 @@ import requests
 # Define the URL of your FastAPI application
 fastapi_url = "https://api-sensuous-z4ulbtghrq-ew.a.run.app"
 
-# Make a GET request to the /items endpoint of your FastAPI application
-response = requests.get(fastapi_url + "/dummy?song=we%20will%20rock%20you")
-
-# Check if the request was successful
-if response.status_code == 200:
-    # Display the response data in Streamlit
-    st.write(response.json())
-else:
-    # Display an error message if the request failed
-    st.write("Error: Could not retrieve items")
-
-
 st.title("""Song Explorer :rocket:: _Discover Similar Songs Based on Your Favorites_
 """)
 
@@ -29,28 +17,39 @@ Simply enter a song that you like, and our tool will analyze its spectrogram to 
 Give it a try and see how it can expand your musical horizons! :notes:
 """)
 
+def predict_playlist(song, artist):
+    # Make a request to FastAPI
+    response = requests.get(fastapi_url + "/predict", params={"song": song, "artist": artist})
+
+    # Return the prediction result
+    return response.json()['playlist']
+
 def main():
     # Header 2
-    st.markdown("## Enter a song here")
+    st.markdown("### Enter a song here :musical_note:")
 
-    # Input
+    # Input song
     song = str(st.text_input('You can write the title of your favorite song here, but make sure you spell it right :eyes:'))
 
-    # Define the accepted songlist
-    songlist = ["we will rock you", "another one bites the dust", "the show must go on"]
+    # Header 2
+    st.markdown("### Enter an artist here :singer:")
 
-    # Only allow songs from the accepted songlist
-    valid_input = True
-    if song != '' and song not in songlist:
-        valid_input = False
+    # Input artist
+    artist = str(st.text_input('You can write the artist of your favorite song here, but make sure you spell it right :eyes:'))
 
     # Display appropriate message
-    if song == '':
+    if song == '' or artist == '':
         pass  # don't display any message if input is empty
-    elif valid_input:
-        st.write('We will be happy to make suggestions based on your choice:', song)
     else:
-        st.write('Sorry, that song is not in our list. Please choose from:', songlist)
+        playlist = predict_playlist(song, artist)
+        st.write(f"We will be happy to make suggestions based on your choice: {song} by {artist}")
+        st.markdown("### Our ML model suggests the following songs :raised_hands::")
+        for index, item in enumerate(playlist):
+            st.write(f"[{index + 1}]")
+            st.write(f"Song: {item[0]}")
+            st.write(f"Artist: {item[1]}")
+            st.write('---')
+        st.write(":musical_note: Enjoy your playlist! :musical_note:", unsafe_allow_html=True)
 
 if __name__ == "__main__":
     main()
