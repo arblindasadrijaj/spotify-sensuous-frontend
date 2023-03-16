@@ -7,14 +7,18 @@ import requests
 # Define the URL of your FastAPI application
 fastapi_url = "https://api-sensuous-z4ulbtghrq-ew.a.run.app"
 
+st.set_page_config(page_title="Song Explorer", page_icon=":musical_note:")
+
+# App title
 st.title("""Song Explorer :rocket:: _Discover Similar Songs Based on Your Favorites_
 """)
 
-st.markdown(""" Our machine learning tool helps you **discover new songs** that you're likely to enjoy based on the characteristics of a song that you input.
 
-Simply enter a song that you like, and our tool will analyze its spectrogram to identify its unique features. It will then suggest other songs with similar spectrograms, which you can explore and discover new music that you might not have found otherwise.
+# Add vinyl record image to header
+st.image("raw_data/image.jpg")
 
-Give it a try and see how it can expand your musical horizons! :notes:
+st.markdown(""" Just pop your favorite song into our machine learning tool, and let us take care of the rest!
+            We'll analyze the song's spectrogram and suggest other tracks that match your style, making it super easy to discover new music that you're bound to love! :hearts:
 """)
 
 def predict_playlist(song, artist):
@@ -41,15 +45,16 @@ def main():
     if song == '' or artist == '':
         pass  # don't display any message if input is empty
     else:
-        playlist = predict_playlist(song, artist)
-        st.write(f"We will be happy to make suggestions based on your choice: {song} by {artist}")
-        st.markdown("### Our ML model suggests the following songs :raised_hands::")
-        for index, item in enumerate(playlist):
-            st.write(f"[{index + 1}]")
-            st.write(f"Song: {item[0]}")
-            st.write(f"Artist: {item[1]}")
-            st.write('---')
-        st.write(":musical_note: Enjoy your playlist! :musical_note:", unsafe_allow_html=True)
+        try:
+            playlist = predict_playlist(song, artist)
+            st.write(f"We will be happy to make suggestions based on your choice: {song} by {artist}")
+            st.markdown("### Our ML model suggests the following songs :raised_hands::")
+            for index, item in enumerate(playlist):
+                st.write(f"**{index + 1}.** {item[0]}\n by {item[1]}\n")
+                st.write('---')
+            st.write(":musical_note: Enjoy your playlist! :musical_note:", unsafe_allow_html=True)
+        except:
+            st.write(":rotating_light: Oops! Something went wrong. Please make sure you spelled the song and artist names correctly and try again.")
 
 if __name__ == "__main__":
     main()
