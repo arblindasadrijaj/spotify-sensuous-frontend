@@ -1,8 +1,15 @@
 import streamlit as st
-
 import numpy as np
 import pandas as pd
 import requests
+import spotipy
+from spotipy.oauth2 import SpotifyClientCredentials
+
+# Define your Spotify API credentials
+client_id = "a970d5ae8ab54e78ac05ad2223f04f35"
+client_secret = "d1ecfd3878fa4ba59665fd8ed6437b6d"
+client_credentials_manager = SpotifyClientCredentials(client_id, client_secret)
+sp = spotipy.Spotify(client_credentials_manager=client_credentials_manager)
 
 # Define the URL of your FastAPI application
 fastapi_url = "https://api-sensuous-z4ulbtghrq-ew.a.run.app"
@@ -50,7 +57,17 @@ def main():
             st.write(f"We will be happy to make suggestions based on your choice: {song} by {artist}")
             st.markdown("### Our ML model suggests the following songs :raised_hands::")
             for index, item in enumerate(playlist):
+                # Retrieve the song's audio preview URL using the Spotify API
+                track_results = sp.search(q=f"{item[0]} {item[1]}", type='track', limit=1)
+                if len(track_results['tracks']['items']) > 0:
+                    preview_url = track_results['tracks']['items'][0]['preview_url']
+                else:
+                    preview_url = ''
+
+                # Display the song information and an audio player
                 st.write(f"**{index + 1}.** {item[0]}\n by {item[1]}\n")
+                if preview_url:
+                    st.audio(preview_url, format='audio/mp3')
                 st.write('---')
             st.write(":musical_note: Enjoy your playlist! :musical_note:", unsafe_allow_html=True)
         except:
